@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist"
+  },
+  "exclude": ["src/admin", "**/*.spec.ts", "**/*.test.ts"]
+}
