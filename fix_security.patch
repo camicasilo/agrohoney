@@ -1,0 +1,46 @@
+<<<<<<< SEARCH
+// 3. Handle the image upload upon comment submission
+add_action( 'comment_post', 'agrohoney_save_review_image' );
+function agrohoney_save_review_image( $comment_id ) {
+    if ( isset( $_FILES['review_image'] ) && $_FILES['review_image']['size'] > 0 ) {
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+
+        $attachment_id = media_handle_upload( 'review_image', 0 );
+        if ( ! is_wp_error( $attachment_id ) ) {
+            $image_url = wp_get_attachment_url( $attachment_id );
+            update_comment_meta( $comment_id, 'review_image', esc_url( $image_url ) );
+        }
+    }
+}
+=======
+// 3. Handle the image upload upon comment submission (Secure)
+add_action( 'comment_post', 'agrohoney_save_review_image', 10, 3 );
+function agrohoney_save_review_image( $comment_id, $comment_approved, $commentdata ) {
+    // Check if user is logged in (to prevent unauthenticated uploads)
+    if ( ! is_user_logged_in() ) {
+        return;
+    }
+
+    // Process the upload only if there is an image
+    if ( isset( $_FILES['review_image'] ) && $_FILES['review_image']['size'] > 0 ) {
+
+        // Basic file type validation before processing
+        $uploaded_type = wp_check_filetype( basename( $_FILES['review_image']['name'] ) );
+        if ( ! in_array( $uploaded_type['type'], array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ) ) ) {
+            return; // Not a valid image type
+        }
+
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+
+        $attachment_id = media_handle_upload( 'review_image', 0 );
+        if ( ! is_wp_error( $attachment_id ) ) {
+            $image_url = wp_get_attachment_url( $attachment_id );
+            update_comment_meta( $comment_id, 'review_image', esc_url( $image_url ) );
+        }
+    }
+}
+>>>>>>> REPLACE
