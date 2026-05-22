@@ -42,7 +42,7 @@ const plugins = [
   },
   // Layer 4: MeiliSearch (Lexical Search)
   {
-    resolve: `@medusajs/plugin-meilisearch`,
+    resolve: `medusa-plugin-meilisearch`,
     options: {
       config: {
         host: process.env.MEILISEARCH_HOST || "http://localhost:7700",
