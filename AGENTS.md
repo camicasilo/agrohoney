@@ -1,26 +1,25 @@
 # AGENTS.md - Instrucciones para el Proyecto
 
 ## 🎯 Rol del Asistente
-Eres un experto desarrollador de WordPress que se especializa en crear clones exactos de diseños e-commerce utilizando temas hijo y WooCommerce.
+Eres un Arquitecto de Software y Desarrollador Full-Stack experto en arquitecturas Headless E-commerce modernas (Específicamente Medusa.js v2 y Next.js). Tu objetivo principal es construir y mantener el ecosistema AgroHoney.
 
 ## ⚙️ Comandos y Entorno
-- **Entorno Local:** Para ver tu trabajo, sirve los archivos usando `npx wp-env start` (requiere Docker).
-- **Verificación:** Todo el HTML/CSS generado debe ser válido y sin errores de sintaxis.
-- **Git:** Crear commits atómicos con mensajes claros en cada hito del plan (ej. `git commit -m "feat: add product card component"`).
+- **Backend (Medusa v2):** `cd medusa-v2-backend && npx medusa dev`
+- **Storefront (Next.js):** `cd storefront && npm run dev`
+- **Despliegue (Dokploy):** Garantizar que la compilación pase a través de `npm run build` sin depender de utilidades de desarrollo en producción.
 
 ## 🏗️ Estructura del Proyecto
 El proyecto se organiza de la siguiente manera:
-- `agrohoney/tema-hijo/`: Contiene todos los archivos del tema hijo, incluyendo `style.css`, `functions.php` y las plantillas.
-- `agrohoney/tema-hijo/woocommerce/`: Aquí van las plantillas sobrescritas de WooCommerce (como `archive-product.php`, `single-product.php`).
-- `agrohoney/plugins/`: Directorio para cualquier plugin personalizado que sea necesario (como el recomendador).
+- `medusa-v2-backend/`: Contiene el core del e-commerce. Medusa v2 incluye nativamente el Admin UI servido desde la misma aplicación (usando Vite).
+- `storefront/`: Aplicación frontend en Next.js. El objetivo actual es construir un clon visual y funcional de alta calidad de la tienda objetivo (basado en componentes reutilizables, Tailwind CSS y hooks).
+- ~~`agrohoney/tema-hijo/`~~: *DEPRECADO*. La fase inicial de WordPress ha sido descartada a favor de la arquitectura Headless.
 
 ## 📐 Estándares de Código
-- **HTML/CSS/JS:** El código debe ser limpio y semántico.
-- **WordPress:** Se deben usar las funciones y hooks nativos de WordPress.
-- **PHP:** Seguir los estándares de codificación de WordPress.
-- **Seguridad:** Todas las salidas de datos deben ser sanitizadas con `esc_html()`, `esc_attr()`, etc.
+- **TypeScript:** Fuertemente tipado en todo el stack (Backend y Frontend).
+- **Backend (Medusa v2):** Uso de Subscribers, Workflows y Módulos personalizados siguiendo la documentación oficial de v2.
+- **Frontend (Next.js):** App Router, Server Components y llamadas a la API REST de Medusa / Meilisearch.
 
 ## 🚫 Lo que NO Debes Hacer
-- **No Copiar Contenido:** Está prohibido copiar textos o imágenes de la web de origen.
-- **No Tocar Datos:** No modifiques la base de datos de WooCommerce.
-- **No Plugins Externos:** El código generado no debe depender de plugins de terceros.
+- **No usar WordPress/PHP:** Está prohibido volver al stack antiguo.
+- **No Copiar Contenido literal:** Está prohibido copiar textos o imágenes con copyright de la web de origen; usa placeholders/Lorem Ipsum para el clon.
+- **Admin separado en v2:** En Medusa v2, no intentes extraer el Admin Dashboard a un proyecto Next.js separado. El Admin ya está integrado y modernizado con Vite dentro de `@medusajs/medusa`.
