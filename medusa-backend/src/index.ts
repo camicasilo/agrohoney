@@ -10,7 +10,8 @@ const start = async () => {
 
   const { container, dbConnection } = await loaders.default({
     directory: process.cwd(),
-    expressApp: app
+    expressApp: app,
+    isTest: false
   })
 
   const server = GracefulShutdownServer.create(

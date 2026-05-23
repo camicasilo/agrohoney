@@ -1,11 +1,12 @@
 import { PaymentService } from "medusa-interfaces"
 
 class WompiPaymentService extends PaymentService {
+  options: any
   static identifier = "wompi"
 
   constructor(options) {
     super()
-    this.options_ = options
+    this.options = options
   }
 
   async getStatus(paymentData) {

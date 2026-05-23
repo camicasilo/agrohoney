@@ -1,11 +1,12 @@
 import { FulfillmentService } from "medusa-interfaces"
 
 class EnviaFulfillmentService extends FulfillmentService {
+  options: any
   static identifier = "envia-com"
 
   constructor(options) {
     super()
-    this.options_ = options
+    this.options = options
   }
 
   async getFulfillmentOptions() {
