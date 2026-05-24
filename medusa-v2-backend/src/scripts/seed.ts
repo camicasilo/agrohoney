@@ -378,19 +378,15 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       product_categories: [
         {
-          name: "Shirts",
+          name: "Raw Honey",
           is_active: true,
         },
         {
-          name: "Sweatshirts",
+          name: "Manuka Honey",
           is_active: true,
         },
         {
-          name: "Pants",
-          is_active: true,
-        },
-        {
-          name: "Merch",
+          name: "Gift Sets",
           is_active: true,
         },
       ],
@@ -401,181 +397,75 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       products: [
         {
-          title: "Medusa T-Shirt",
+          title: "Premium Raw Honey",
           category_ids: [
-            categoryResult.find((cat) => cat.name === "Shirts")!.id,
+            categoryResult.find((cat) => cat.name === "Raw Honey")!.id,
           ],
           description:
-            "Reimagine the feeling of a classic T-shirt. With our cotton T-shirts, everyday essentials no longer have to be ordinary.",
-          handle: "t-shirt",
-          weight: 400,
+            "Pure, unpasteurized raw honey straight from the hive. Rich in natural enzymes and antioxidants.",
+          handle: "premium-raw-honey",
+          weight: 500,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
           images: [
             {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-front.png",
-            },
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-back.png",
-            },
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-white-front.png",
-            },
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-white-back.png",
+              url: "https://images.unsplash.com/photo-1587049352847-4d4b126a61fc?q=80&w=800&auto=format&fit=crop",
             },
           ],
           options: [
             {
               title: "Size",
-              values: ["S", "M", "L", "XL"],
-            },
-            {
-              title: "Color",
-              values: ["Black", "White"],
+              values: ["250g", "500g", "1kg"],
             },
           ],
           variants: [
             {
-              title: "S / Black",
-              sku: "SHIRT-S-BLACK",
+              title: "250g",
+              sku: "RAW-HONEY-250",
               options: {
-                Size: "S",
-                Color: "Black",
+                Size: "250g",
               },
               prices: [
                 {
-                  amount: 10,
+                  amount: 15,
                   currency_code: "eur",
                 },
                 {
-                  amount: 15,
+                  amount: 18,
                   currency_code: "usd",
                 },
               ],
             },
             {
-              title: "S / White",
-              sku: "SHIRT-S-WHITE",
+              title: "500g",
+              sku: "RAW-HONEY-500",
               options: {
-                Size: "S",
-                Color: "White",
+                Size: "500g",
               },
               prices: [
                 {
-                  amount: 10,
+                  amount: 25,
                   currency_code: "eur",
                 },
                 {
-                  amount: 15,
+                  amount: 30,
                   currency_code: "usd",
                 },
               ],
             },
             {
-              title: "M / Black",
-              sku: "SHIRT-M-BLACK",
+              title: "1kg",
+              sku: "RAW-HONEY-1000",
               options: {
-                Size: "M",
-                Color: "Black",
+                Size: "1kg",
               },
               prices: [
                 {
-                  amount: 10,
+                  amount: 45,
                   currency_code: "eur",
                 },
                 {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "M / White",
-              sku: "SHIRT-M-WHITE",
-              options: {
-                Size: "M",
-                Color: "White",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "L / Black",
-              sku: "SHIRT-L-BLACK",
-              options: {
-                Size: "L",
-                Color: "Black",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "L / White",
-              sku: "SHIRT-L-WHITE",
-              options: {
-                Size: "L",
-                Color: "White",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "XL / Black",
-              sku: "SHIRT-XL-BLACK",
-              options: {
-                Size: "XL",
-                Color: "Black",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "XL / White",
-              sku: "SHIRT-XL-WHITE",
-              options: {
-                Size: "XL",
-                Color: "White",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
+                  amount: 52,
                   currency_code: "usd",
                 },
               ],
@@ -588,297 +478,58 @@ export default async function seedDemoData({ container }: ExecArgs) {
           ],
         },
         {
-          title: "Medusa Sweatshirt",
+          title: "UMF™ 15+ Manuka Honey",
           category_ids: [
-            categoryResult.find((cat) => cat.name === "Sweatshirts")!.id,
+            categoryResult.find((cat) => cat.name === "Manuka Honey")!.id,
           ],
           description:
-            "Reimagine the feeling of a classic sweatshirt. With our cotton sweatshirt, everyday essentials no longer have to be ordinary.",
-          handle: "sweatshirt",
-          weight: 400,
+            "Certified UMF™ 15+ / MGO 514+ Manuka Honey. Sourced from the most remote regions of New Zealand. Perfect for daily wellness.",
+          handle: "umf-15-manuka-honey",
+          weight: 250,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
           images: [
             {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-front.png",
-            },
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-back.png",
+              url: "https://images.unsplash.com/photo-1587049352851-8d4e89134a6e?q=80&w=800&auto=format&fit=crop",
             },
           ],
           options: [
             {
               title: "Size",
-              values: ["S", "M", "L", "XL"],
+              values: ["250g", "500g"],
             },
           ],
           variants: [
             {
-              title: "S",
-              sku: "SWEATSHIRT-S",
+              title: "250g",
+              sku: "MANUKA-15-250",
               options: {
-                Size: "S",
+                Size: "250g",
               },
               prices: [
                 {
-                  amount: 10,
+                  amount: 65,
                   currency_code: "eur",
                 },
                 {
-                  amount: 15,
+                  amount: 75,
                   currency_code: "usd",
                 },
               ],
             },
             {
-              title: "M",
-              sku: "SWEATSHIRT-M",
+              title: "500g",
+              sku: "MANUKA-15-500",
               options: {
-                Size: "M",
+                Size: "500g",
               },
               prices: [
                 {
-                  amount: 10,
+                  amount: 115,
                   currency_code: "eur",
                 },
                 {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "L",
-              sku: "SWEATSHIRT-L",
-              options: {
-                Size: "L",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "XL",
-              sku: "SWEATSHIRT-XL",
-              options: {
-                Size: "XL",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-          ],
-          sales_channels: [
-            {
-              id: defaultSalesChannel[0].id,
-            },
-          ],
-        },
-        {
-          title: "Medusa Sweatpants",
-          category_ids: [
-            categoryResult.find((cat) => cat.name === "Pants")!.id,
-          ],
-          description:
-            "Reimagine the feeling of classic sweatpants. With our cotton sweatpants, everyday essentials no longer have to be ordinary.",
-          handle: "sweatpants",
-          weight: 400,
-          status: ProductStatus.PUBLISHED,
-          shipping_profile_id: shippingProfile.id,
-          images: [
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-front.png",
-            },
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-back.png",
-            },
-          ],
-          options: [
-            {
-              title: "Size",
-              values: ["S", "M", "L", "XL"],
-            },
-          ],
-          variants: [
-            {
-              title: "S",
-              sku: "SWEATPANTS-S",
-              options: {
-                Size: "S",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "M",
-              sku: "SWEATPANTS-M",
-              options: {
-                Size: "M",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "L",
-              sku: "SWEATPANTS-L",
-              options: {
-                Size: "L",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "XL",
-              sku: "SWEATPANTS-XL",
-              options: {
-                Size: "XL",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-          ],
-          sales_channels: [
-            {
-              id: defaultSalesChannel[0].id,
-            },
-          ],
-        },
-        {
-          title: "Medusa Shorts",
-          category_ids: [
-            categoryResult.find((cat) => cat.name === "Merch")!.id,
-          ],
-          description:
-            "Reimagine the feeling of classic shorts. With our cotton shorts, everyday essentials no longer have to be ordinary.",
-          handle: "shorts",
-          weight: 400,
-          status: ProductStatus.PUBLISHED,
-          shipping_profile_id: shippingProfile.id,
-          images: [
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-front.png",
-            },
-            {
-              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-back.png",
-            },
-          ],
-          options: [
-            {
-              title: "Size",
-              values: ["S", "M", "L", "XL"],
-            },
-          ],
-          variants: [
-            {
-              title: "S",
-              sku: "SHORTS-S",
-              options: {
-                Size: "S",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "M",
-              sku: "SHORTS-M",
-              options: {
-                Size: "M",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "L",
-              sku: "SHORTS-L",
-              options: {
-                Size: "L",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
-                  currency_code: "usd",
-                },
-              ],
-            },
-            {
-              title: "XL",
-              sku: "SHORTS-XL",
-              options: {
-                Size: "XL",
-              },
-              prices: [
-                {
-                  amount: 10,
-                  currency_code: "eur",
-                },
-                {
-                  amount: 15,
+                  amount: 130,
                   currency_code: "usd",
                 },
               ],

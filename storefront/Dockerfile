@@ -19,7 +19,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
