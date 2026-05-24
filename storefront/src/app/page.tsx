@@ -1,6 +1,20 @@
 import Link from "next/link";
+import { sdk } from "../lib/medusa";
 
-export default function Home() {
+export default async function Home() {
+  let products = [];
+  try {
+    // Fetch real products from the Medusa backend
+    const { products: fetchedProducts } = await sdk.store.product.list({
+      limit: 4,
+      fields: "id,title,handle,thumbnail,variants.prices,categories.name"
+    });
+    products = fetchedProducts || [];
+  } catch (error) {
+    console.error("Failed to fetch products from Medusa backend:", error);
+    // Fallback to empty if the backend is unreachable during build or dev
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -61,23 +75,44 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Product Grid Placeholder */}
+        {/* Product Grid dynamically fetching from Medusa */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {[1, 2, 3, 4].map((item) => (
-            <Link href={`/product/sample-${item}`} key={item} className="group cursor-pointer">
-              <div className="aspect-[4/5] bg-accent rounded-lg overflow-hidden relative mb-4">
-                {/* Product Image Placeholder */}
-                <div className="absolute inset-0 flex-center text-secondary/30 group-hover:scale-105 transition-transform duration-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          {products.length > 0 ? products.map((item: Record<string, unknown>) => {
+            const price = Array.isArray(item.variants) && item.variants[0]?.prices?.[0]?.amount
+              ? Number(item.variants[0].prices[0].amount).toFixed(2)
+              : "0.00";
+
+            const categoryName = Array.isArray(item.categories) && item.categories[0]?.name ? item.categories[0].name : "Premium Honey";
+
+            return (
+              <Link href={`/product/${item.handle}`} key={item.id as string} className="group cursor-pointer">
+                <div className="aspect-[4/5] bg-accent rounded-lg overflow-hidden relative mb-4">
+                  {item.thumbnail ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.thumbnail as string}
+                      alt={item.title as string}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex-center text-secondary/30 group-hover:scale-105 transition-transform duration-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className="space-y-1 text-center">
-                <div className="text-xs font-semibold tracking-widest text-primary uppercase">UMF™ {(item * 5)}+ / MGO {(item * 83)}+</div>
-                <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">Premium Raw Honey Jar</h3>
-                <p className="text-gray-500">${(item * 25).toFixed(2)}</p>
-              </div>
-            </Link>
-          ))}
+                <div className="space-y-1 text-center">
+                  <div className="text-xs font-semibold tracking-widest text-primary uppercase">{categoryName as string}</div>
+                  <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">{item.title as string}</h3>
+                  <p className="text-gray-500">${price}</p>
+                </div>
+              </Link>
+            )
+          }) : (
+            // Fallback empty state if backend is down or no products exist
+            <div className="col-span-full text-center py-12 text-gray-500">
+              No products found. Please ensure the Medusa backend is running and seeded.
+            </div>
+          )}
         </div>
 
         <div className="mt-12 text-center">
