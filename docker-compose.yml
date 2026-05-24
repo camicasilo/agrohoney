@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  medusa:
+    build:
+      context: ./medusa-v2-backend
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_API_KEY=${MEILISEARCH_API_KEY}
+      - QDRANT_URL=http://qdrant:6333
+      - STORE_CORS=${STORE_CORS}
+      - ADMIN_CORS=${ADMIN_CORS}
+      - JWT_SECRET=${JWT_SECRET}
+      - COOKIE_SECRET=${COOKIE_SECRET}
+      - PORT=9000
+      - HOST=0.0.0.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.medusa.rule=Host(`api.agrohoney.com`)"
+      - "traefik.http.services.medusa.loadbalancer.server.port=9000"
+
+  storefront:
+    build:
+      context: ./storefront
+      dockerfile: Dockerfile
+    environment:
+      - NEXT_PUBLIC_MEDUSA_BACKEND_URL=https://api.agrohoney.com
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.storefront.rule=Host(`store.agrohoney.com`)"
+      - "traefik.http.services.storefront.loadbalancer.server.port=3000"
+
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=medusa
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - medusa-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d medusa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dokploy-network
+
+  redis:
+    image: redis:alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - medusa-redis-data:/data
+    networks:
+      - dokploy-network
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    environment:
+      - MEILI_MASTER_KEY=${MEILISEARCH_API_KEY}
+      - MEILI_ENV=production
+    volumes:
+      - medusa-meili-data:/meili_data
+    networks:
+      - dokploy-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    volumes:
+      - medusa-qdrant-data:/qdrant/storage
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  medusa-db-data:
+  medusa-redis-data:
+  medusa-meili-data:
+  medusa-qdrant-data:
