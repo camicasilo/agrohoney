@@ -12,8 +12,8 @@ RUN npm install
 
 COPY . .
 
-# Build the Medusa project (without admin to save RAM in production)
-RUN NODE_ENV=production npm run build
+# Build the Medusa project including the admin panel
+RUN npm run build
 
 # Start command handles migrations and then starts the server
 CMD ["npm", "run", "start"]

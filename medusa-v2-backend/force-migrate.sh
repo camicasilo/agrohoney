@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Script to clear database locks from failed migrations before running medusa db:migrate
 
 echo "Checking for database locks or pending migrations..."
