@@ -1,13 +1,18 @@
-FROM node:20.12-bookworm-slim AS base
+ARG NODE_VERSION=22.14
+FROM node:${NODE_VERSION}-bookworm-slim AS base
 
 FROM base AS deps
 WORKDIR /opt/medusa/deps
+ARG NODE_ENV=development
+ENV NODE_ENV=$NODE_ENV
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm ci
 
 FROM base AS builder
 WORKDIR /opt/medusa/build
-COPY --from=deps /opt/medusa/deps/node_modules ./node_modules
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+COPY --from=deps /opt/medusa/deps .
 COPY . .
 RUN npm run build
 
@@ -19,6 +24,10 @@ RUN apt-get update \
 USER node
 WORKDIR /opt/medusa
 COPY --from=builder --chown=node:node /opt/medusa/build .
-EXPOSE 9000
+ARG PORT=9000
+ARG NODE_ENV=production
+ENV PORT=$PORT
+ENV NODE_ENV=$NODE_ENV
+EXPOSE $PORT
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["npm", "run", "start"]
