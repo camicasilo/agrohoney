@@ -5,8 +5,9 @@ FROM base AS deps
 WORKDIR /opt/medusa/deps
 ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
-COPY package*.json yarn.lock* pnpm-lock.yaml* .yarn* ./
-RUN npm ci
+COPY package.json yarn.lock .yarnrc.yml* ./
+COPY .yarn ./.yarn
+RUN corepack enable yarn && yarn install --immutable
 
 FROM base AS builder
 WORKDIR /opt/medusa/build
@@ -14,7 +15,7 @@ ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 COPY --from=deps /opt/medusa/deps .
 COPY . .
-RUN npm run build
+RUN corepack enable yarn && yarn run build
 
 FROM base AS runner
 RUN apt-get update \
