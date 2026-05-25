@@ -5,6 +5,16 @@ loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.MEDUSA_DATABASE_URL || process.env.DATABASE_URL,
+    databaseDriverOptions: {
+      connection: {
+        ssl: false,
+      },
+      pool: {
+        min: 2,
+        max: 5,
+        idleTimeoutMillis: 30000,
+      }
+    },
     redisUrl: process.env.MEDUSA_REDIS_URL || process.env.REDIS_URL,
     http: {
       storeCors: process.env.STORE_CORS!,
