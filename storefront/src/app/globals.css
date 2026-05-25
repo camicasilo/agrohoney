@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Colors - Honey/Wood Theme */
+  --color-primary: #d4af37; /* Honey Gold */
+  --color-primary-dark: #b8860b; /* Dark Honey */
+  --color-secondary: #8b4513; /* Saddle Brown - Wood */
+  --color-background: #fdfbf7; /* Off-white warm background */
+  --color-foreground: #2d2a26; /* Dark text */
+  --color-accent: #f0e6d2; /* Light accent background */
+}
+
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-secondary: var(--color-secondary);
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-accent: var(--color-accent);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Custom utilities for the clone */
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
