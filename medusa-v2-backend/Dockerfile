@@ -22,17 +22,18 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y tini=0.19.0-1+b3 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-USER node
 WORKDIR /opt/medusa
 # Copiar archivos de dependencias desde el builder
 COPY --from=builder --chown=node:node /opt/medusa/build/package.json .
 COPY --from=builder --chown=node:node /opt/medusa/build/yarn.lock .
 COPY --from=builder --chown=node:node /opt/medusa/build/.yarn ./.yarn
-# Instalar SOLO dependencias de producción
+# Instalar SOLO dependencias de producción (como root)
 RUN corepack enable yarn && yarn install --immutable --production
 # Copiar artefactos del build (sin node_modules)
 COPY --from=builder --chown=node:node /opt/medusa/build/.medusa ./.medusa
 COPY --from=builder --chown=node:node /opt/medusa/build/medusa-config.ts .
+# Cambiar a usuario node
+USER node
 ARG PORT=9000
 ARG NODE_ENV=production
 ENV PORT=$PORT
