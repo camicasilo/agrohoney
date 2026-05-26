@@ -7,7 +7,7 @@ ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
 RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm config set approve-builds true
+ENV PNPM_APPROVE_BUILDS=true
 RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
