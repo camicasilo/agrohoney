@@ -29,6 +29,7 @@
     "pg": "^8.11.5"
   },
   "devDependencies": {
+    "@medusajs/admin-bundler": "2.15.3",
     "@medusajs/test-utils": "2.15.3",
     "@swc/core": "^1.7.28",
     "@swc/jest": "^0.2.36",

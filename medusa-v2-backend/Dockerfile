@@ -24,6 +24,7 @@ RUN apt-get update \
 USER node
 WORKDIR /opt/medusa
 COPY --from=builder --chown=node:node /opt/medusa/build .
+COPY --from=builder --chown=node:node /opt/medusa/build/.medusa ./.medusa
 ARG PORT=9000
 ARG NODE_ENV=production
 ENV PORT=$PORT
