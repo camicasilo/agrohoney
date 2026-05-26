@@ -24,10 +24,15 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 USER node
 WORKDIR /opt/medusa
+# Copiar archivos de dependencias desde el builder
 COPY --from=builder --chown=node:node /opt/medusa/build/package.json .
-COPY --from=builder --chown=node:node /opt/medusa/build/medusa-config.ts .
-COPY --from=builder --chown=node:node /opt/medusa/build/node_modules ./node_modules
+COPY --from=builder --chown=node:node /opt/medusa/build/yarn.lock .
+COPY --from=builder --chown=node:node /opt/medusa/build/.yarn ./.yarn
+# Instalar SOLO dependencias de producción
+RUN corepack enable yarn && yarn install --immutable --production
+# Copiar artefactos del build (sin node_modules)
 COPY --from=builder --chown=node:node /opt/medusa/build/.medusa ./.medusa
+COPY --from=builder --chown=node:node /opt/medusa/build/medusa-config.ts .
 ARG PORT=9000
 ARG NODE_ENV=production
 ENV PORT=$PORT
