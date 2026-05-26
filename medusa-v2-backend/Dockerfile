@@ -24,7 +24,10 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 USER node
 WORKDIR /opt/medusa
-COPY --from=builder --chown=node:node /opt/medusa/build .
+COPY --from=builder --chown=node:node /opt/medusa/build/package.json .
+COPY --from=builder --chown=node:node /opt/medusa/build/medusa-config.ts .
+COPY --from=builder --chown=node:node /opt/medusa/build/node_modules ./node_modules
+COPY --from=builder --chown=node:node /opt/medusa/build/.medusa ./.medusa
 ARG PORT=9000
 ARG NODE_ENV=production
 ENV PORT=$PORT
