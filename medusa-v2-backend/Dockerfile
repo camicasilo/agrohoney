@@ -5,22 +5,25 @@ FROM base AS deps
 WORKDIR /opt/medusa/deps
 ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
-COPY package*.json ./
-RUN npm ci
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /opt/medusa/build
 ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
-COPY --from=deps /opt/medusa/deps .
+RUN npm install -g pnpm
+COPY --from=deps /opt/medusa/deps/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 FROM base AS runner
 RUN apt-get update \
   && apt-get install --no-install-recommends -y tini=0.19.0-1+b3 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN npm install -g pnpm
 USER node
 WORKDIR /opt/medusa
 COPY --from=builder --chown=node:node /opt/medusa/build .
@@ -31,4 +34,4 @@ ENV PORT=$PORT
 ENV NODE_ENV=$NODE_ENV
 EXPOSE $PORT
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]
