@@ -10,8 +10,8 @@ export default async function Home() {
       fields: "id,title,handle,thumbnail,variants.prices,categories.name"
     });
     products = fetchedProducts || [];
-  } catch (error) {
-    console.error("Failed to fetch products from Medusa backend:", error);
+  } catch {
+    // console.error("Failed to fetch products from Medusa backend:", error);
     // Fallback to empty if the backend is unreachable during build or dev
   }
 
