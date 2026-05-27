@@ -34,8 +34,9 @@ COPY --from=builder --chown=node:node /opt/medusa/build/.yarn ./.yarn
 RUN corepack enable yarn && yarn install --immutable --production
 # Copiar artefactos del build (sin node_modules)
 COPY --from=builder --chown=node:node /opt/medusa/build/.medusa ./.medusa
-COPY --from=builder --chown=node:node /opt/medusa/build/medusa-config.ts .
+RUN test -f /opt/medusa/.medusa/server/medusa-config.js || (echo "ERROR: medusa-config.js no encontrado" && exit 1)
 # Cambiar a usuario node
+ENV MEDUSA_CONFIG_PATH=/opt/medusa/.medusa/server/medusa-config.js
 USER node
 ARG PORT=9000
 ARG NODE_ENV=production
@@ -43,4 +44,4 @@ ENV PORT=$PORT
 ENV NODE_ENV=$NODE_ENV
 EXPOSE $PORT
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["npm", "run", "start"]
+CMD ["yarn", "run", "start"]
