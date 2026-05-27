@@ -1,18 +1,15 @@
 ARG NODE_VERSION=22.14
 FROM node:${NODE_VERSION}-bookworm-slim AS base
 
-FROM base AS installer
-WORKDIR /opt/medusa/install
-RUN npm install -g bun
+FROM base AS deps
+WORKDIR /opt/medusa/deps
 COPY package.json yarn.lock .yarnrc.yml* ./
 COPY .yarn ./.yarn
-RUN bun install --yarn
+RUN corepack enable yarn && yarn install --immutable
 
 FROM base AS builder
 WORKDIR /opt/medusa/build
-COPY --from=installer /opt/medusa/install/node_modules ./node_modules
-COPY --from=installer /opt/medusa/install/package.json .
-COPY --from=installer /opt/medusa/install/yarn.lock .
+COPY --from=deps /opt/medusa/deps .
 COPY . .
 RUN corepack enable yarn && yarn run build
 
