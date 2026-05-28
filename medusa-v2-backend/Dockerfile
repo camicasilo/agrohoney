@@ -1,17 +1,18 @@
 ARG NODE_VERSION=22.14
 FROM node:${NODE_VERSION}-bookworm-slim AS base
 
-RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++
-
-FROM base AS deps
-WORKDIR /opt/medusa/deps
+FROM base AS installer
+WORKDIR /opt/medusa/install
+RUN npm install -g bun
 COPY package.json yarn.lock .yarnrc.yml* ./
 COPY .yarn ./.yarn
-RUN corepack enable yarn && yarn install --immutable
+RUN bun install --yarn
 
 FROM base AS builder
 WORKDIR /opt/medusa/build
-COPY --from=deps /opt/medusa/deps .
+COPY --from=installer /opt/medusa/install/node_modules ./node_modules
+COPY --from=installer /opt/medusa/install/package.json .
+COPY --from=installer /opt/medusa/install/yarn.lock .
 COPY . .
 RUN corepack enable yarn && yarn run build
 
@@ -30,7 +31,7 @@ COPY --from=builder --chown=node:node /opt/medusa/build/package.json .
 COPY --from=builder --chown=node:node /opt/medusa/build/yarn.lock .
 COPY --from=builder --chown=node:node /opt/medusa/build/.yarn ./.yarn
 # Instalar SOLO dependencias de producción (como root)
-RUN corepack enable yarn && yarn install --immutable --production
+RUN corepack enable yarn && yarn workspaces focus --production
 # Copiar artefactos del build (sin node_modules)
 COPY --from=builder --chown=node:node /opt/medusa/build/.medusa ./.medusa
 RUN test -f /opt/medusa/.medusa/server/medusa-config.js || (echo "ERROR: medusa-config.js no encontrado" && exit 1)
@@ -38,9 +39,7 @@ RUN test -f /opt/medusa/.medusa/server/medusa-config.js || (echo "ERROR: medusa-
 ENV MEDUSA_CONFIG_PATH=/opt/medusa/.medusa/server/medusa-config.js
 USER node
 ARG PORT=9000
-ARG NODE_ENV=production
 ENV PORT=$PORT
-ENV NODE_ENV=$NODE_ENV
 EXPOSE $PORT
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["yarn", "run", "start"]
