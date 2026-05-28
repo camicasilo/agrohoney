@@ -1,6 +1,8 @@
 ARG NODE_VERSION=22.14
 FROM node:${NODE_VERSION}-bookworm-slim AS base
 
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++
+
 FROM base AS deps
 WORKDIR /opt/medusa/deps
 COPY package.json yarn.lock .yarnrc.yml* ./
