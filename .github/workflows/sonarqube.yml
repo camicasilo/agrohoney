@@ -2,49 +2,33 @@ name: SonarQube Analysis
 
 on:
   push:
-    branches: [ "feature/clone-newzealandhoneyco-9852497130477197705" ]
+    branches:
+      - feature/clone-newzealandhoneyco-9852497130477197705
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  sonarqube-backend:
-    name: Analyze Backend (Medusa v2)
+  sonarqube:
+    name: Scan Agrohoney Project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          path: 'repo'
-      - name: SonarQube Scan Backend
-        uses: SonarSource/sonarqube-scan-action@v4
-        env:
-          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN_AGROHONEY }}
-          SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=Agrohoney_Backend
-            -Dsonar.projectName='Agrohoney Backend'
-            -Dsonar.sources=repo/medusa-v2-backend/src
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/coverage/**,**/*.test.*,**/*.spec.*
-            -Dsonar.sourceEncoding=UTF-8
 
-  sonarqube-frontend:
-    name: Analyze Storefront (Next.js)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          path: 'repo'
-      - name: SonarQube Scan Frontend
+      - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN_AGROHONEY }}
-          SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=Agrohoney_Storefront
-            -Dsonar.projectName='Agrohoney Storefront'
-            -Dsonar.sources=repo/storefront/src
-            -Dsonar.exclusions=**/node_modules/**,**/.next/**,**/out/**,**/coverage/**,**/*.test.*,**/*.spec.*
+            -Dsonar.host.url=${{ secrets.SONARQUBE_HOST_URL }}
+            -Dsonar.projectKey=Agrohoney
+            -Dsonar.projectName='Agrohoney'
+            -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.sources=.
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/.next/**,**/coverage/**,**/*.test.*,**/*.spec.*,**/__tests__/**,**/__mocks__/**,**/.github/**
             -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.javascript.file.suffixes=.js,.jsx,.ts,.tsx
+            -Dsonar.typescript.file.suffixes=.ts,.tsx
