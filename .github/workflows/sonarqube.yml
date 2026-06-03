@@ -26,9 +26,6 @@ jobs:
             -Dsonar.host.url=${{ secrets.SONARQUBE_HOST_URL }}
             -Dsonar.projectKey=Agrohoney
             -Dsonar.projectName='Agrohoney'
-            -Dsonar.branch.name=${{ github.ref_name }}
             -Dsonar.sources=.
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/.next/**,**/coverage/**,**/*.test.*,**/*.spec.*,**/__tests__/**,**/__mocks__/**,**/.github/**
             -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.javascript.file.suffixes=.js,.jsx,.ts,.tsx
-            -Dsonar.typescript.file.suffixes=.ts,.tsx
