@@ -1,0 +1,31 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches:
+      - feature/clone-newzealandhoneyco-9852497130477197705
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube:
+    name: Scan Agrohoney Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN_AGROHONEY }}
+        with:
+          args: >
+            -Dsonar.host.url=${{ secrets.SONARQUBE_HOST_URL }}
+            -Dsonar.projectKey=Agrohoney
+            -Dsonar.projectName='Agrohoney'
+            -Dsonar.sources=.
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/.next/**,**/coverage/**,**/*.test.*,**/*.spec.*,**/__tests__/**,**/__mocks__/**,**/.github/**
+            -Dsonar.sourceEncoding=UTF-8
